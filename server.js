@@ -13,14 +13,11 @@ app.use(cors());
 app.use(express.json());
 
 // ---- Database connection pool ----
+// استخدام DATABASE_URL الموحد مع تفعيل SSL للإنتاج (Render)
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
-
 
 const SELECT_COLUMNS = `
   id,
@@ -195,5 +192,5 @@ app.delete("/api/expenses/:id", async (req, res) => {
 
 // ---- Start the server ----
 app.listen(PORT, () => {
-  console.log(`Expense Tracker API running on http://localhost:${PORT}`);
+  console.log(`Expense Tracker API running on port ${PORT}`);
 });
